@@ -12,25 +12,26 @@ class Vendor_customer_id_field(models.Model):
 	def create(self, data):
 
 		sequence = self.env['ir.sequence']
-		if data['customer'] == True:
-			prefix = 'C'+data['name'][:1].upper()
-			sequence = self.env['ir.sequence'].search([('prefix','=',prefix),('code','=','res.partner.customer')])
-			if not sequence:
-				padding = 4
-				implementation='no_gap'
-				active=True
-				sequence = self.env['ir.sequence'].create({'prefix':prefix,'padding':padding,'implementation':implementation,'active':active, 'name':'Customer Id '+prefix,'code':'res.partner.customer'})
-			data['customer_id'] = sequence.next_by_id()
+		if 'customer' in data.keys():
+			if data['customer'] == True:
+				prefix = 'C'+data['name'][:1].upper()
+				sequence = self.env['ir.sequence'].search([('prefix','=',prefix),('code','=','res.partner.customer')])
+				if not sequence:
+					padding = 4
+					implementation='no_gap'
+					active=True
+					sequence = self.env['ir.sequence'].create({'prefix':prefix,'padding':padding,'implementation':implementation,'active':active, 'name':'Customer Id '+prefix,'code':'res.partner.customer'})
+				data['customer_id'] = sequence.next_by_id()
 
-		elif data['customer'] == False:
-			prefix = 'V'+data['name'][:1].upper()
-			sequence = self.env['ir.sequence'].search([('prefix','=',prefix),('code','=','res.partner.supplier')])
-			if not sequence:
-				padding = 4
-				implementation='no_gap'
-				active=True
-				sequence = self.env['ir.sequence'].create({'prefix':prefix,'padding':padding,'implementation':implementation,'active':active, 'name':'Supplier Id '+prefix,'code':'res.partner.supplier'})
-			data['supplier_id'] = sequence.next_by_id()
+			elif data['customer'] == False:
+				prefix = 'V'+data['name'][:1].upper()
+				sequence = self.env['ir.sequence'].search([('prefix','=',prefix),('code','=','res.partner.supplier')])
+				if not sequence:
+					padding = 4
+					implementation='no_gap'
+					active=True
+					sequence = self.env['ir.sequence'].create({'prefix':prefix,'padding':padding,'implementation':implementation,'active':active, 'name':'Supplier Id '+prefix,'code':'res.partner.supplier'})
+				data['supplier_id'] = sequence.next_by_id()
 
 		return super(Vendor_customer_id_field, self).create(data)
 
